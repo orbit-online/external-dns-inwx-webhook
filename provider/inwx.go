@@ -34,7 +34,11 @@ func (p *INWXProvider) Records(ctx context.Context) ([]*endpoint.Endpoint, error
 	if _, err := p.client.login(); err != nil {
 		return nil, err
 	}
-	defer p.client.logout()
+	defer func() {
+		if err := p.client.logout(); err != nil {
+			slog.Error("error encountered while logging out", "err", err)
+		}
+	}()
 
 	zones, err := p.client.getZones()
 	if err != nil {
@@ -67,7 +71,11 @@ func (p *INWXProvider) ApplyChanges(ctx context.Context, changes *plan.Changes) 
 	if _, err := p.client.login(); err != nil {
 		return err
 	}
-	defer p.client.logout()
+	defer func() {
+		if err := p.client.logout(); err != nil {
+			slog.Error("error encountered while logging out", "err", err)
+		}
+	}()
 
 	zones, err := p.client.getZones()
 	if err != nil {
@@ -165,7 +173,10 @@ func (p *INWXProvider) ApplyChanges(ctx context.Context, changes *plan.Changes) 
 			for j := range max(len(oldEp.Targets), len(newEp.Targets), len(recIDs)) {
 				switch {
 				case j >= len(newEp.Targets):
-					p.client.deleteRecord(recIDs[j])
+					if err = p.client.deleteRecord(recIDs[j]); err != nil {
+						errs = append(errs, err)
+						slog.Error("failed to delete record", "target", oldEp.Targets[j], "ep", oldEp, "err", err)
+					}
 				case j >= len(oldEp.Targets):
 					rec := &inwx.NameserverRecordRequest{
 						Domain:  zone,
@@ -217,7 +228,7 @@ func getRecIDs(zone string, records *[]inwx.NameserverRecord, ep endpoint.Endpoi
 		}
 	}
 	if len(recIDs) != len(ep.Targets) {
-		return nil, fmt.Errorf("Failed to map all endpoint targets to entries")
+		return nil, fmt.Errorf("failed to map all endpoint targets to entries")
 	}
 	return recIDs, nil
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log/slog"
 	"net/http"
 	"os"
@@ -75,19 +74,11 @@ func main() {
 
 	var wg errgroup.Group
 
-	// Run Metrics server
 	wg.Go(func() error {
-		ctxTimeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-		defer metricsServer.Shutdown(ctxTimeout)
-		defer cancel()
 		logger.Info("Started external-dns-inwx-webhook metrics server", "address", metricsListenAddr)
 		return web.ListenAndServe(&metricsServer, &metricsFlags, logger)
 	})
-	// Run webhook API server
 	wg.Go(func() error {
-		ctxTimeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-		defer webhookServer.Shutdown(ctxTimeout)
-		defer cancel()
 		logger.Info("Started external-dns-inwx-webhook webhook server", "address", listenAddr)
 		return web.ListenAndServe(&webhookServer, &webhookFlags, logger)
 	})

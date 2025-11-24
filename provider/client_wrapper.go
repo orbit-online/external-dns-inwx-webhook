@@ -29,15 +29,11 @@ func (w *ClientWrapper) logout() error {
 }
 
 func (w *ClientWrapper) getRecords(domain string) (*[]inwx.NameserverRecord, error) {
-	records := []inwx.NameserverRecord{}
 	zone, err := w.client.Nameservers.Info(&inwx.NameserverInfoRequest{Domain: domain})
 	if err != nil {
 		return nil, fmt.Errorf("unable to retrieve records for zone %s: %w", domain, err)
 	}
-	for _, rec := range zone.Records {
-		records = append(records, rec)
-	}
-	return &records, nil
+	return &zone.Records, nil
 }
 
 func (w *ClientWrapper) getZones() (*[]string, error) {

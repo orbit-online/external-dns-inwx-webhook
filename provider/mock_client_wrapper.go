@@ -106,11 +106,10 @@ func (w *MockClientWrapper) deleteRecord(recID int) error {
 	}
 }
 
-func (w *MockClientWrapper) CreateZone(zone string) error {
+func (w *MockClientWrapper) CreateZone(zone string) {
 	if _, ok := w.db[zone]; ok {
-		return fmt.Errorf("zone %s already exists", zone)
+		panic(fmt.Errorf("zone %s already exists", zone))
 	} else {
 		w.db[zone] = &[]inwx.NameserverRecord{}
-		return nil
 	}
 }

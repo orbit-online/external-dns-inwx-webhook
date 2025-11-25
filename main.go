@@ -28,7 +28,7 @@ var (
 	tlsConfig         = kingpin.Flag("tls-config", "Path to TLS config file.").Envar("INWX_TLS_CONFIG").Default("").String()
 
 	domainFilter = kingpin.Flag("domain-filter", "Limit possible target zones by a domain suffix; specify multiple times for multiple domains").Envar("INWX_DOMAIN_FILTER").Strings()
-	sandbox      = kingpin.Flag("sandbox", "Operate on the INWX sandbox database").Default("false").Envar("INWX_SANDBOX").Bool()
+	sandbox      = kingpin.Flag("inwx-sandbox", "Operate on the INWX sandbox database").Default("false").Envar("INWX_SANDBOX").Bool()
 	username     = kingpin.Flag("inwx-username", "The login username for the INWX API").Required().Envar("INWX_USERNAME").String()
 	password     = kingpin.Flag("inwx-password", "The login password for the INWX API").Required().Envar("INWX_PASSWORD").String()
 )

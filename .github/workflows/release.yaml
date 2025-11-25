@@ -2,6 +2,7 @@ name: Release a new container image version
 
 on:
   push:
+    branches: ['main']
     tags: [ 'v*' ]
 
 jobs:

@@ -9,7 +9,7 @@ require (
 	github.com/prometheus/common v0.67.4
 	github.com/prometheus/exporter-toolkit v0.15.0
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sync v0.18.0
+	golang.org/x/sync v0.19.0
 	sigs.k8s.io/external-dns v0.20.0
 )
 

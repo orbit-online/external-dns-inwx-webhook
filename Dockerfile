@@ -4,7 +4,7 @@ COPY . /app
 
 RUN go build
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 COPY --from=builder /app/external-dns-inwx-webhook /
 ENTRYPOINT ["/external-dns-inwx-webhook"]
